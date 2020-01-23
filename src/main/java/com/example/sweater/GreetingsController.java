@@ -41,5 +41,21 @@ private MessageRepo repository;
         return "main";
     }
 
+    @PostMapping("/filter")
+    public String filter(
+            @RequestParam String filter,
+            Map<String, Object> model
+    ){
+        Iterable messages;
+
+        if(filter != ""){
+            messages = repository.findByTagContaining(filter);
+        } else {
+            messages = repository.findAll();
+        }
+        model.put("messages", messages);
+        return "main";
+    }
+
 
 }
