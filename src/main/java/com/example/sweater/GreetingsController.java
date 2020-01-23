@@ -13,20 +13,20 @@ public class GreetingsController {
 @Autowired
 private MessageRepo repository;
 
-    @GetMapping("/greeting")
+    @GetMapping("/")
     public String greeting(@RequestParam(name="name", required=false, defaultValue="World") String name, Map<String, Object> model) {
         model.put("name", name); //param for template
         return "greetings"; // template name
     }
 
-    @GetMapping
+    @GetMapping("/main")
     public String main(Map<String, Object> model) {
         Iterable messages = repository.findAll();
         model.put("messages", messages);
         return "main";
     }
 
-    @PostMapping
+    @PostMapping("/main")
     public String add(
             @RequestParam String text,
             @RequestParam String tag,
