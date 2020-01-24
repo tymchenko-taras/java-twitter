@@ -1,23 +1,23 @@
-package com.example.sweater;
+package com.example.sweater.controller;
 
+import com.example.sweater.model.Role;
+import com.example.sweater.model.User;
+import com.example.sweater.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.security.sasl.AuthenticationException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.*;
 
 @Controller
 public class SingUpController {
 
     @Autowired
-    private UserRepo userRepo;
+    private UserRepository userRepository;
 
     @GetMapping("/signup")
     public String getSignUp(){
@@ -31,7 +31,7 @@ public class SingUpController {
             Map<String, Object> model
     ){
 
-        User user = userRepo.findByUsername(username);
+        User user = userRepository.findByUsername(username);
         if(user != null){
             model.put("message", "username already exists");
             return "signup";
@@ -43,7 +43,7 @@ public class SingUpController {
         Set<Role> a = new HashSet<Role>();
         a.add(Role.USER);
         user.setRoles(a);
-        userRepo.save(user);
+        userRepository.save(user);
 
         return "redirect:/login";
     }
