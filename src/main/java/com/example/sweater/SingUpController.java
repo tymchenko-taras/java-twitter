@@ -54,6 +54,6 @@ public class SingUpController {
         // debug to figure out what happened
         Object a = request.getSession().getAttribute("SPRING_SECURITY_LAST_EXCEPTION");
         //((Exception)request.getSession().getAttribute("SPRING_SECURITY_LAST_EXCEPTION")).getMessage();
-
+        return "";
     }
 }
