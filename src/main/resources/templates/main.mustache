@@ -25,9 +25,15 @@
 </form>
 </div>
 
+<table>
 {{#messages}}
-    <div><b>{{id}}</b><span>{{text}}</span><span>{{tag}}</span></div>
+    <tr>
+        <td><b>{{id}}</b></td>
+        <td>{{text}}</td>
+        <td>{{tag}}</td>
+        <td>{{authorName}}</td>
+    </tr>
 {{/messages}}
-
+</table>
 </body>
 </html>
