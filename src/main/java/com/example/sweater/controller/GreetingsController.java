@@ -23,8 +23,18 @@ private MessageRepository repository;
     }
 
     @GetMapping("/main")
-    public String main(Map<String, Object> model) {
-        Iterable messages = repository.findAll();
+    public String main(
+            @RequestParam(required = false, defaultValue = "") String filter,
+            Map<String, Object> model
+    ) {
+
+        Iterable messages;
+        if(filter != ""){
+            messages = repository.findByTagContaining(filter);
+        } else {
+            messages = repository.findAll();
+        }
+        model.put("filter", filter);
         model.put("messages", messages);
         return "main";
     }
@@ -44,22 +54,4 @@ private MessageRepository repository;
 
         return "main";
     }
-
-    @PostMapping("/filter")
-    public String filter(
-            @RequestParam String filter,
-            Map<String, Object> model
-    ){
-        Iterable messages;
-
-        if(filter != ""){
-            messages = repository.findByTagContaining(filter);
-        } else {
-            messages = repository.findAll();
-        }
-        model.put("messages", messages);
-        return "main";
-    }
-
-
 }

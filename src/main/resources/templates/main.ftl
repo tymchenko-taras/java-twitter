@@ -2,16 +2,15 @@
 <@common.page>
     <div>
         <@common.logout/>
-        <form method="POST">
+        <form method="POST" action="/main">
             <input type="hidden" name="_csrf" value="${_csrf.token}">
             <input type="text" name="text" placeholder="Text..."/>
             <input type="text" name="tag" placeholder="Tag..."/>
             <input type="submit"/>
         </form>
 
-        <form method="POST" action="filter">
-            <input type="hidden" name="_csrf" value="${_csrf.token}">
-            <input type="text" name="filter" placeholder="Filter"/>
+        <form method="GET" action="/main">
+            <input type="text" name="filter" value="${filter}" placeholder="Filter"/>
             <input type="submit"/>
         </form>
     </div>
