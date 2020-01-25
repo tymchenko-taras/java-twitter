@@ -2,10 +2,11 @@
 <@common.page>
     <div>
         <@common.logout/>
-        <form method="POST" action="/main">
+        <form method="POST" action="/main" enctype="multipart/form-data">
             <input type="hidden" name="_csrf" value="${_csrf.token}">
             <input type="text" name="text" placeholder="Text..."/>
             <input type="text" name="tag" placeholder="Tag..."/>
+            <input type="file" name="file">
             <input type="submit"/>
         </form>
 
@@ -22,6 +23,9 @@
                 <td>${message.text}</td>
                 <td>${message.tag}</td>
                 <td>${message.authorName}</td>
+                <td><#if message.filename??>
+                        <img src="/img/${message.filename}" alt="">
+                </#if></td>
             </tr>
         </#list>
     </table>
