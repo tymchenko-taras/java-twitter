@@ -1,21 +1,22 @@
 package com.example.sweater.controller;
 
-import com.example.sweater.model.Role;
 import com.example.sweater.model.User;
 import com.example.sweater.repository.UserRepository;
+import com.example.sweater.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.Map;
 
 @Controller
 public class SingUpController {
-
+    @Autowired
+    private UserService userService;
     @Autowired
     private UserRepository userRepository;
 
@@ -26,25 +27,38 @@ public class SingUpController {
 
     @PostMapping("/signup")
     public String postSignUp(
-            @RequestParam String username,
-            @RequestParam String password,
+            User user,
             Map<String, Object> model
     ){
 
-        User user = userRepository.findByUsername(username);
-        if(user != null){
-            model.put("message", "username already exists");
+        if(!userService.addUser(user)){
+            model.put("message", "User exists");
             return "signup";
         }
-        user = new User();
-        user.setUsername(username);
-        user.setPassword(password);
-        user.setActive(true);
-        Set<Role> a = new HashSet<Role>();
-        a.add(Role.USER);
-        user.setRoles(a);
-        userRepository.save(user);
-
+        if(!userService.sendConfirmation(user)){
+            model.put("message", "Unable to send confirmation");
+            return "signup";
+        }
         return "redirect:/login";
     }
+
+    @GetMapping("/activate/{hash}")
+    public String activate(
+            @PathVariable String hash,
+            Map<String, Object> model
+    ){
+        User user = userRepository.findByActivationHash(hash);
+        if(user == null){
+            model.put("messsage", "Couldnt find user");
+            return "error";
+        }
+        if(!userService.activateUser(user)){
+            model.put("messsage", "Couldnt activate user");
+            return "error";
+        }
+
+        model.put("messsage", "Successfully activated");
+        return "redirect:/login";
+    }
+
 }

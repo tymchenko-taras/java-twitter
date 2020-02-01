@@ -1,5 +1,9 @@
 <#import "controls/common.ftl" as common>
 <@common.page>
+    <#if message??>
+        <div>${message}</div>
+    </#if>
+
     <form action="login" method="post">
         <input type="hidden" name="_csrf" value="${_csrf.token}">
         <div><label> User Name : <input type="text" name="username"/> </label></div>

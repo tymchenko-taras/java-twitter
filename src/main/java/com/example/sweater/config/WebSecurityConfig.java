@@ -29,7 +29,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 // main page allowed to all - any other pages require login
                 .authorizeRequests()
-                .antMatchers("/", "/signup", "/error", "/static/**").permitAll()
+                .antMatchers("/", "/signup", "/error", "/static/**", "/activate/**").permitAll()
                 .anyRequest().authenticated()
             .and()
                 .formLogin()
