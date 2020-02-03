@@ -1,8 +1,10 @@
 package com.example.sweater.model;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 public class Message {
@@ -10,6 +12,9 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator( name = "native", strategy = "native")
     private Long id;
+
+    @NotBlank(message = "Please fill in this field")
+    @Length(max = 10, message = "Message shouldn't be more than 10 chars")
     private String text;
     private String tag;
     private String filename;
@@ -24,6 +29,14 @@ public class Message {
         this.text = text;
         this.tag = tag;
         this.author = user;
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
     }
 
     public String getAuthorName(){

@@ -4,7 +4,10 @@
         <@common.logout/>
         <form method="POST" action="/main" enctype="multipart/form-data">
             <input type="hidden" name="_csrf" value="${_csrf.token}">
-            <input type="text" name="text" placeholder="Text..."/>
+            <div>
+                <input type="text" name="text" placeholder="Text..."/>
+                <#if textError??>${textError}</#if>
+            </div>
             <input type="text" name="tag" placeholder="Tag..."/>
             <input type="file" name="file">
             <input type="submit"/>

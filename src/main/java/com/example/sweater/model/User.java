@@ -5,6 +5,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.util.Collection;
 import java.util.Set;
 
@@ -15,9 +17,16 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator( name = "native", strategy = "native")
     private Long id;
+    @NotBlank(message = "Please fill in this field")
     private String username;
+    @NotBlank(message = "Please fill in this field")
     private String password;
+    @Transient
+    @NotBlank(message = "Please fill in this field")
+    private String password2;
     private Boolean active;
+    @NotBlank(message = "Please fill in this field")
+    @Email(message = "Invalid email")
     private  String email;
     private  String activationHash;
 
@@ -101,6 +110,14 @@ public class User implements UserDetails {
 
     public String getActivationHash() {
         return activationHash;
+    }
+
+    public String getPassword2() {
+        return password2;
+    }
+
+    public void setPassword2(String password2) {
+        this.password2 = password2;
     }
 
     public void setActivationHash(String activationHash) {
