@@ -11,10 +11,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -64,5 +62,33 @@ public class UserService implements UserDetailsService {
 //        user.setRoles(Collections.singleton(Role.USER));
         userRepository.save(user);
         return true;
+    }
+
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    public void saveUser(User user, String username, Map<String, String> form) {
+        Set<String> roles = Arrays.stream(Role.values())
+                .map(Role::name)
+                .collect(Collectors.toSet());
+
+        for(String key : form.keySet()){
+            if(roles.contains(key)){
+                user.getRoles().add(Role.valueOf(key));
+            }
+        }
+        user.setUsername(username);
+        userRepository.save(user);
+    }
+
+    public void updateProfile(User user, String email, String password) {
+        if(user.getEmail() != email) {
+            user.setEmail(email);
+        }
+        if(!StringUtils.isEmpty(password)) {
+            user.setPassword(password);
+        }
+        userRepository.save(user);
     }
 }

@@ -3,10 +3,13 @@ package com.example.sweater.controller;
 import com.example.sweater.model.Role;
 import com.example.sweater.model.User;
 import com.example.sweater.repository.UserRepository;
+import com.example.sweater.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -19,11 +22,11 @@ import java.util.stream.Collectors;
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @GetMapping("/users")
     public String getSignUp(Map<String, Object> model) {
-        model.put("users", userRepository.findAll());
+        model.put("users", userService.findAll());
         return "user/list";
     }
 
@@ -44,17 +47,28 @@ public class UserController {
             @PathVariable User user,
             Map<String, Object> model
     ) {
-        Set<String> roles = Arrays.stream(Role.values())
-                .map(Role::name)
-                .collect(Collectors.toSet());
-
-        for(String key : form.keySet()){
-            if(roles.contains(key)){
-                user.getRoles().add(Role.valueOf(key));
-            }
-        }
-        user.setUsername(username);
-        userRepository.save(user);
+        userService.saveUser(user, username, form);
         return "redirect:/users";
+    }
+
+    @GetMapping("user/profile")
+    public String getProfile(
+            Map<String, Object> model,
+            @AuthenticationPrincipal User user
+    ){
+        model.put("user", user);
+        return "user/profile";
+    }
+
+    @PostMapping("user/profile")
+    public String postProfile(
+            @RequestParam String email,
+            @RequestParam String password,
+            Map<String, Object> model,
+            @AuthenticationPrincipal User user
+    ){
+
+        userService.updateProfile(user, email, password);
+        return "redirect:/user/profile";
     }
 }
