@@ -22,7 +22,6 @@ public class User implements UserDetails {
     @NotBlank(message = "Please fill in this field")
     private String password;
     @Transient
-    @NotBlank(message = "Please fill in this field")
     private String password2;
     private Boolean active;
     @NotBlank(message = "Please fill in this field")
