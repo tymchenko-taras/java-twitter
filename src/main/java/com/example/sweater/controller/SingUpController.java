@@ -43,11 +43,11 @@ public class SingUpController {
         }
         if(!userService.addUser(user)){
             model.put("message", "User exists");
-            return "signup";
+            return this.getSignUp(model);
         }
         if(!userService.sendConfirmation(user)){
             model.put("message", "Unable to send confirmation");
-            return "signup";
+            return this.getSignUp(model);
         }
         return "redirect:/login";
     }

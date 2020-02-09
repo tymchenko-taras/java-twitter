@@ -5,6 +5,7 @@ import com.example.sweater.model.User;
 import com.example.sweater.repository.UserRepository;
 import freemarker.template.utility.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,6 +24,8 @@ public class UserService implements UserDetailsService {
     private MailService mailService;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Value("${application.mainUrl}")
+    private String applicationMainUrl;
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
@@ -45,8 +48,9 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
 
         String body = String.format("Hello, %s. \n" +
-                "Follow the <a href='http:localhost:8080/activate/%s'>link</a> to activate",
+                "Follow the <a href='http://%s/activate/%s'>link</a> to activate",
                 user.getUsername(),
+                applicationMainUrl,
                 hash
         );
         return mailService.send(user.getEmail(), "Activate", body);
