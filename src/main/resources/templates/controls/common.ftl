@@ -5,6 +5,7 @@
         <title>Getting Started: Serving Web Content</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <link rel="stylesheet" href="/static/css/style.css">
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     </head>
     <body>
         <#nested>
