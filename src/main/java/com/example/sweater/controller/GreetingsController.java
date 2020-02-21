@@ -2,6 +2,7 @@ package com.example.sweater.controller;
 import com.example.sweater.model.Message;
 import com.example.sweater.repository.MessageRepository;
 import com.example.sweater.model.User;
+import com.example.sweater.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,11 +24,11 @@ import java.util.stream.Collectors;
 
 @Controller
 public class GreetingsController {
-@Autowired
-private MessageRepository repository;
+    @Autowired
+    private MessageRepository repository;
 
-@Value("${upload.path}")
-private String uploadPath;
+    @Autowired
+    private MessageService messageService;
 
     @GetMapping("/")
     public String greeting(@RequestParam(name="name", required=false, defaultValue="World") String name, Map<String, Object> model) {
@@ -65,16 +66,7 @@ private String uploadPath;
             Map<String, String> errors = ControllerUtil.getErrors(bindingResult);
             model.mergeAttributes(errors);
         } else {
-            if (file != null && !file.getOriginalFilename().isEmpty()) {
-                File uploadDir = new File(uploadPath);
-                String filename = UUID.randomUUID().toString() + "." + file.getOriginalFilename();
-                if (!uploadDir.exists()) {
-                    uploadDir.mkdir();
-                }
-                file.transferTo(new File(uploadPath + "/" + filename));
-                message.setFilename(filename);
-            }
-            repository.save(message);
+            messageService.save(message, file);
         }
 
         Iterable messages = repository.findAll();
